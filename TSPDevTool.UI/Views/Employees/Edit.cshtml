@@ -1,0 +1,529 @@
+﻿@model TSPDevTools.Model.Employee
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+<style>
+    /*Fade in animation*/
+    /*#editFields {
+        display: none;
+    }
+
+    #theView {
+        display: none;
+    }*/
+
+    /* Select drop down list */
+    #SkillLevel option[value="1"] {
+        background-color: red;
+    }
+
+        #SkillLevel option[value="2"] {
+            background-color: yellow;
+        }
+
+        #SkillLevel option[value="3"] {
+            background-color: deepskyblue;
+        }
+
+        #SkillLevel option[value="4"] {
+            background-color: green;
+        }
+
+        #SkillLevel option {
+            color: black;
+            font-weight:bolder;
+        }
+
+        #SkillLevel {
+            text-align: left;
+            width: 17%;
+            height:90%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+
+    /* Add Skill */
+        #skillstxt{
+            margin-left: 5px;
+            width: 30%;
+        }
+
+    /* Add Subs */
+        #substxt {
+        
+            width: 30%;
+        }
+    /* UI modify */
+
+        h1, h2{
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .col-md-10 {
+            width: 50%;
+            margin-left: 0px;
+            padding-left: 0px;
+            text-align: left;
+        }
+
+        .col-md-10 .form-control {
+            width: 60%;
+            text-align: center;
+        }
+
+        .col-md-2{
+            margin: 0px 40px 0px 15px;
+            padding: 0px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin: 10px;
+            text-align: center;
+            width: 50%;
+        }
+
+        .form-control {
+            text-align: left;
+            margin-left: 0px;
+            padding-left: 0px;
+            width: 19%;
+        }
+
+        #submit{
+            clear: both;
+            width: 20%;
+            margin-top: 110px;
+            text-align: center;
+        }
+
+
+        #add {
+            float: left;
+            margin: 10px 0px 10px 0px;
+        }
+
+    #edit {
+        float: right;
+        margin: 10px 50px 10px 10px;
+    }
+
+        #back {
+            clear: both;
+        }
+
+        .addSkill {
+         text-align:left;
+         width: 100%;
+        }
+
+        #editFields {
+            text-align: left;
+            margin-left: 0px;
+            float: left;
+            width: 100%;
+        }
+
+        #theView {
+            text-align: center;
+            margin: 25px 0px 20px 10px;
+
+        }
+
+        #theView #edit{
+            text-align: center;
+        }
+
+        #theView #add {
+            text-align: left;
+        }
+
+        .addBtn {
+            vertical-align: baseline;
+            margin-top: 15px;
+        }
+
+        .removeBtn {
+            vertical-align: baseline;
+            margin-top: 15px;
+        }
+
+        .addBtn:hover {
+            opacity: 0.9;
+        }
+
+        .removeBtn:hover {
+            opacity: 0.9;
+        }
+
+    #addSubBtn{
+        vertical-align:baseline;
+    }
+
+    .form-control {
+        display: inline;
+    }
+
+    #addSub{
+        margin-top: 0px;
+    }
+</style>
+
+<!--                                        Begining of the Script                                -->
+<script>
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                            // The Autocomplete function for Subs
+
+            $(document).ready(function () { //Never forget the ready
+                $("#substxt").autocomplete({
+                    source: function (request, response) {
+                        var subs = new Array();
+                        $.ajax({
+                            url: "/Employees/GetAutoSubs",
+                            type: "POST",
+                            dataType: "json",
+                            data: { Prefix: request.term, empId: @Model.ID },
+                            success: function (data) {
+                                $("#subselectedhdn").val("");
+                                for (var i = 0; i < data.length; i++) {
+                                    subs[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                                }
+                                response(subs);
+                            }
+                        });
+                    },
+                    select: function (event, ui) {
+                        $("#subselectedhdn").val(ui.item.Id);
+                    }
+                });
+            })
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                // Skills autocomplete
+            $(document).ready(function () {
+                $("#skillstxt").autocomplete({
+                    source: function (request, response) {
+                        var skills = new Array();
+                        $.ajax({
+                            url: "/Employees/GetAutoSkills",
+                            type: "POST",
+                            dataType: "json",
+                            data: { Prefix: request.term, empId: @Model.ID },
+                            success: function (data) {
+                                $("#skillselectedhdn").val("");
+                                for (var i = 0; i < data.length; i++) {
+                                    skills[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                                }
+                                response(skills);
+                            }
+                        });
+                    },
+                    select: function (event, ui) {
+                        $("#skillselectedhdn").val(ui.item.Id);
+                    }
+                });
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                     // Add function for skills
+                $("#addSkillBtn").click(function () {
+                    if ($("#skillselectedhdn").val() != "") {
+                        $.ajax({
+                            url: "/Employees/AddSkills",
+                            type: "GET",
+                            data: { skillId: $("#skillselectedhdn").val(), empId: @Model.ID, skillLevelId: $("#SkillLevel").val() },
+                            success: function (data) {
+                                $("#partial").html(data);
+
+                            }
+                        });
+                    }
+                    else {
+                                            // Confirming adding the new skill to the database
+                        if (confirm('Are you sure you want to add this new skill?')) {
+                            $.ajax({
+                                url: "/Employees/AddNewSkill",
+                                type: "GET",
+                                data: { empId: @Model.ID, skillLevelId: $("#SkillLevel").val(), skill: $("#skillstxt").val(), },
+                                success: function (data) {
+                                    $("#skillselectedhdn").val("hidden"); //ADDS new skill to the data base
+                                    $("#partial").html(data);
+                                }
+                            });
+                        }
+                    }
+
+                    $("#skillstxt").val("");  // Removing text after search
+                    })
+
+
+
+                ///////////////////////////////////////////////////////////////////////////////////////////
+
+                                                 //Add function for Subsidiaries
+                $("#addSubBtn").click(function () {
+                    if ($("#subselectedhdn").val() != "") {
+                    $.ajax({
+                        url: "/Employees/AddSubsidiary",
+                        type: "GET",
+                        data: { subId: $("#subselectedhdn").val(), empId: @Model.ID},
+                        success: function (data) {
+                            $("#subspartial").html(data); // Added Subsidiaries shown in view
+                        }
+                    });
+                    }
+                    else {
+                                               // Confirming adding the new sub to the database
+                        if (confirm('Are you sure you want to add this new Subsidiary?')) {
+                            $.ajax({
+                                url: "/Employees/AddNewSubsidary",
+                                type: "GET",
+                                data: { empId: @Model.ID , subname: $("#substxt").val()},
+                                success: function (data) {
+                                    $("#subselectedhdn").val("hidden"); //ADDS new sub to the data base
+                                    $("#subspartial").html(data);
+                                }
+                            });
+                        }
+                    }
+                    $("#substxt").val("");  // Removing text after search
+                })
+                ////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                  //Delete All Skills Button
+                $("#rButton").click(function () {
+                       $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("deleteAllEmpSkills")',
+                        data: { empId: @Model.ID},
+                        dataType: 'json',
+                        success: function (data) {
+                            //$("#mainTr").remove();
+                            $("#partial").html(data);
+                        },
+                        error: function (response)
+                        {s
+                            alert(response.responseText);
+                        }
+                    });
+                })
+
+                $("#rButton2").click(function () {
+                       $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("deleteAllEmpSubs")',
+                        data: { empId: @Model.ID},
+                        dataType: 'json',
+                        success: function (data) {
+                            //("#mainTr").remove();
+                            $("#subspartial").html(data);
+                        },
+                        error: function (response)
+                        {
+                            alert(response.responseText);
+                        }
+                    });
+                })
+
+                // Enter Button
+                $(document).keypress(function (e) {
+                    if (e.keyCode == 13) {
+                        e.preventDefault();
+                        $("#addSkillBtn").click();
+                    }
+                });
+
+                //Getting the skilllevel for donut chart
+                $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("getSkillLevels")',
+                        data: { empId: @Model.ID},
+                        dataType: 'json',
+                        success: function (data) {
+
+                            var ctx = $("#mycanvas").get(0).getContext("2d");
+                            var chart = new Chart(ctx).Doughnut(data);
+                            
+                        },
+                        error: function (response)
+                        {
+                            alert(response.responseText);
+                        }
+                    });
+               
+                //The Animations
+                //$('#editFields').slideDown(2000);
+                //$('#theView').slideDown(2000);
+
+                $('.form-horizontal').slideDown(2000);
+
+            });
+               ///////////////////////////////////////////////////////////////////////////////////////////////
+</script>
+<!--End of Script -->
+
+
+<h2>@Html.DisplayFor(model => model.Name)</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <h4>User Profile</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+
+        <div id="editFields">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.RoleID, "RoleID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("RoleID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Role.ID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Alias, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Alias, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Alias, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkloadID, "WorkloadID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("WorkloadID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Workload.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.JoiningDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.JoiningDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.JoiningDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ManagerID, "ManagerID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ManagerID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ManagerID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <br /><br />
+        
+       <!-- User Skills View -->
+        <section id="theView">
+            <h1>User Skills and Subsidaries</h1>
+            <div id="add">
+                <!-- ADD SKILLS -->
+                <h3 class="add">Add Skills</h3>
+                <div class="addSkill">
+                    <div>
+                        <!--Textbox for adding Skills -->
+                        @Html.Label("Enter Skill & Skill Level")
+                        @Html.TextBox("skillstxt")
+
+                        <!-- SkillLevel Dropdownlist -->
+                     
+                        @Html.DropDownList("SkillLevel", null, htmlAttributes: new { @class = "form-control" }) 
+                    </div>
+
+                    <!--Add Skills Button -->
+                    <input id="addSkillBtn" class="addBtn btn" type="button" value="Add Skill">
+              
+
+                    <!-- Skills Hidden textbox -->
+                    <input type="hidden" id="skillselectedhdn" style=" width: 1%;" />
+                </div>
+
+                <!-- ADD SUBSIDARIES -->
+                <h3 class="add">Add Subsidaries</h3>
+                <div class="addSub">
+                    <!--Textbox for adding subsidiaries -->
+                    @Html.Label("Enter Subsidiary")
+                    @Html.TextBox("substxt")
+
+                    <!--Add Subsidaries Button-->
+                    <input id="addSubBtn" class="addBtn btn" type="button" value="Add Subsidiary" />
+
+                    <!-- Subsidaries Hidden textbox -->
+                    <input type="hidden" id="subselectedhdn" style=" width: 1%;" />
+                </div>
+            </div>
+
+            <!-- EDIT SKILLS -->
+            <div id="edit">
+                <h3>Edit Skills</h3>
+
+                <!--Partial View-->
+                <div id="partial">
+                    @Html.Partial("_userSkills", Model.EmpSkills)
+                </div>
+                <!-- Remove All Skills Button-->
+                <button id="rButton" class="removeBtn btn" type="button">Remove All Skills</button>
+
+                <br />
+                <br />
+
+                <!-- EDIT SUBSIDARIES -->
+                <h3> Edit Subsidiaries </h3>
+
+                <!--Partial View-->
+                <div id="subspartial">
+                    @Html.Partial("_UserSubs", Model.EmpSubsidaries)
+                </div>
+
+                <!-- Remove All Subsidaries Button-->
+                <button id="rButton2" class="removeBtn btn" type="button">Remove All Subsidaries</button>
+            </div>
+
+        </section>
+
+   <!-- The Save Button-->
+   <div id="submit">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn" id="saveButton" /><br /><br />
+        </div>
+   </div>
+        <div id="back">
+            @Html.ActionLink("Details", "Details", new { id = Model.ID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+</div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,218 @@
+﻿@model TSPDevTools.Model.Track
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<style>
+    /* Styles for all the Edit and Details Views */
+    .col-md-10 {
+        width: 50%;
+        margin-left: 10px;
+        padding-left: 0px;
+        text-align: left;
+    }
+
+        .col-md-10 .form-control {
+            width: 60%;
+            text-align: left;
+        }
+
+    .col-md-2 {
+        margin: 0px 40px 0px 15px;
+        padding: 0px;
+        width: 5%;
+        text-align: left;
+    }
+
+    .form-group {
+        margin: 10px;
+        text-align: left;
+        width: 50%;
+    }
+
+    .form-control {
+        text-align: center;
+        margin-left: 0px;
+        padding-left: 6px;
+        width: 19%;
+    }
+
+    label {
+        margin-top: 30px;
+        margin-left: 10px;
+    }
+
+    #skillstxt{
+        width: 100px;
+        padding: 0px;
+        margin: 0px 0px 0px 10px;
+    }
+</style>
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Track</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div> 
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WorkloadID, "WorkloadID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("WorkloadID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.WorkloadID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!--        Choose Skills HTML           -->
+        <div class="form-group">
+               @Html.Label("Choose Skills")
+            <br />
+            <div >
+                @Html.TextBox("skillstxt")
+                <input type="button" id="addSkillBtn" value="Add Skill"/>  <!--Add Skills Button-->
+                <input id="rButton" type="button" value="Remove All" />    <!--Remove All Skills Button-->
+                @Html.Hidden("skillselectedhdn")
+                
+                <br /><br/> 
+            </div>
+        </div>
+
+        <div id="partial">
+            @Html.Partial("_trackSkills", Model.TrackSkills)
+        </div>
+        
+        <br/><br/>
+        
+        <!--Save Button-->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" @*style="margin-top: 5px;"*@/>    <!--The Save Button-->
+            </div>
+        </div>
+    </div>
+}
+<script>
+
+    // Enter Button
+    $(document).keypress(function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            $("#addSkillBtn").click();
+        }
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Skills autocomplete
+    $(document).ready(function () {
+        $("#skillstxt").autocomplete({
+            source: function (request, response) {
+                var skills = new Array();
+                $.ajax({
+                    url: "/Tracks/GetAutoSkills",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { Prefix: request.term, trackId: @Model.ID },
+                    success: function (data) {
+                       
+                                $("#skillselectedhdn").val("");
+                                for (var i = 0; i < data.length; i++) {
+                                    skills[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                                }
+                                response(skills);
+                            }
+                        });
+                    },
+                    select: function (event, ui) {
+                        $("#skillselectedhdn").val(ui.item.Id);
+                    }
+        });
+
+        //Animation
+        $(".form-horizontal").slideDown(500);
+
+    })
+    ////////////////////////////////////////////////////////////////////////////
+
+        // Add function for skills
+                $("#addSkillBtn").click(function () {
+                    if ($("#skillselectedhdn").val() != "") {
+                        $.ajax({
+                            url: "/Tracks/AddSkills",
+                            type: "GET",
+                            data: { skillId: $("#skillselectedhdn").val(), trackId: @Model.ID},
+                            success: function (data) {
+                                $("#partial").html(data);
+                            }
+                        });
+                    }
+                    else {
+                                            // Confirming adding the new skill to the database
+                        if (confirm('Are you sure you want to add this new skill?')) {
+                            $.ajax({
+                                url: "/Tracks/AddNewSkill",
+                                type: "GET",
+                                data: { trackId: @Model.ID, skill: $("#skillstxt").val(), },
+                                success: function (data) {
+                                    $("#skillselectedhdn").val("hidden"); //ADDS new skill to the data base
+                                    $("#partial").html(data);
+                                }
+                            });
+                        }
+                    }
+                    $("#skillstxt").val("");  // Removing text after search
+                })
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                  //Delete All Skills Button
+                $("#rButton").click(function () {
+                       $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("deleteAllTrackSkills")',
+                        data: { trackId: @Model.ID},
+                        dataType: 'json',
+                        success: function (data) {
+                            //$("#mainTr").remove();
+                            $("#partial").html(data);
+                        },
+                        error: function (response)
+                        {
+                            alert(response.responseText);
+                        }
+                    });
+                    
+                })
+                ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+</script>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+    

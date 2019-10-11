@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TSPDevTools.Model.Track>
+                <!--This is the partial view for adding the tracks in search by tracks page-->
+@{ 
+    ViewBag.Title = "Tracks Filter";
+
+}
+
+
+<script>
+                                                  // Remove from filter
+
+    $(document).ready(function () {
+        $(".remove").click(function () {
+            if ($("#skillId").val() != "") {
+                var xIcon = $(this);
+                $.ajax({
+                    url: "/Search/RemoveTracks",
+                    type: "GET",
+                    data: { trackId: $(this).parent().siblings("input").val() },
+                    success: function (data) {
+
+                        xIcon.parent().parent().animate({
+                            opacity: 0.0,
+                        }, 500, function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            }
+        })
+    })
+</script>
+
+
+                                <!--HTML-->
+
+<table id="table">
+    <tr id="mainTr">
+        @foreach (var item in Model)
+        {
+            <th>
+                <span class="tag label label-info" style="background-color:dimgrey; font-size: 10pt;">
+                    <span class="skills">@Html.DisplayFor(modelItem => item.Name)</span>
+                    <a class="theX"><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a>
+                    <input type="hidden" id="skillId" class="theSkills" value="@item.ID" />
+                </span>
+            </th>
+        }
+    </tr>
+</table>
+
+
+
+
+
+

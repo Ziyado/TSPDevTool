@@ -1,0 +1,731 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TSPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="Alias" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="WorkloadID" Type="int" Nullable="false" />
+          <Property Name="JoiningDate" Type="date" Nullable="false" />
+          <Property Name="ManagerID" Type="int" />
+        </EntityType>
+        <EntityType Name="EmpSkills">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmpID" Type="int" Nullable="false" />
+          <Property Name="SkillD" Type="int" Nullable="false" />
+          <Property Name="SkillLevelID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmpSubsidary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmpID" Type="int" Nullable="false" />
+          <Property Name="SubsidaryID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SkillLevels">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Skills">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subsidaries">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="System_Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RegDate" Type="datetime" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tracks">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="WorkloadID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrackSkill">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SkillD" Type="int" Nullable="false" />
+          <Property Name="TrackID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workload">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Emp/Skills_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="EmpSkills" Type="Self.EmpSkills" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSkills">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp/Skills_Skill Levels">
+          <End Role="SkillLevels" Type="Self.SkillLevels" Multiplicity="1" />
+          <End Role="EmpSkills" Type="Self.EmpSkills" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SkillLevels">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSkills">
+              <PropertyRef Name="SkillLevelID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp/Subsidary_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="EmpSubsidary" Type="Self.EmpSubsidary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSubsidary">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp/Subsidary_Subsidaries">
+          <End Role="Subsidaries" Type="Self.Subsidaries" Multiplicity="1" />
+          <End Role="EmpSubsidary" Type="Self.EmpSubsidary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subsidaries">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSubsidary">
+              <PropertyRef Name="SubsidaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Employees1" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employees1">
+              <PropertyRef Name="ManagerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Workload">
+          <End Role="Workload" Type="Self.Workload" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="WorkloadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Track/Skill_Tracks">
+          <End Role="Tracks" Type="Self.Tracks" Multiplicity="1" />
+          <End Role="TrackSkill" Type="Self.TrackSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tracks">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TrackSkill">
+              <PropertyRef Name="TrackID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tracks_Workload">
+          <End Role="Workload" Type="Self.Workload" Multiplicity="1" />
+          <End Role="Tracks" Type="Self.Tracks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tracks">
+              <PropertyRef Name="WorkloadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SkillCheck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="empid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SubsidariesCheck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="empid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="TracksCheck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="trackid" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="TSPModelStoreContainer">
+          <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpSkills" EntityType="Self.EmpSkills" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpSubsidary" EntityType="Self.EmpSubsidary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SkillLevels" EntityType="Self.SkillLevels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Skills" EntityType="Self.Skills" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subsidaries" EntityType="Self.Subsidaries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="System_Users" EntityType="Self.System_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tracks" EntityType="Self.Tracks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrackSkill" EntityType="Self.TrackSkill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workload" EntityType="Self.Workload" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Emp/Skills_Employees" Association="Self.FK_Emp/Skills_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="EmpSkills" EntitySet="EmpSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp/Skills_Skill Levels" Association="Self.FK_Emp/Skills_Skill Levels">
+            <End Role="SkillLevels" EntitySet="SkillLevels" />
+            <End Role="EmpSkills" EntitySet="EmpSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp/Subsidary_Employees" Association="Self.FK_Emp/Subsidary_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="EmpSubsidary" EntitySet="EmpSubsidary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp/Subsidary_Subsidaries" Association="Self.FK_Emp/Subsidary_Subsidaries">
+            <End Role="Subsidaries" EntitySet="Subsidaries" />
+            <End Role="EmpSubsidary" EntitySet="EmpSubsidary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Employees" Association="Self.FK_Employees_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Employees1" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Role" Association="Self.FK_Employees_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Workload" Association="Self.FK_Employees_Workload">
+            <End Role="Workload" EntitySet="Workload" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Track/Skill_Tracks" Association="Self.FK_Track/Skill_Tracks">
+            <End Role="Tracks" EntitySet="Tracks" />
+            <End Role="TrackSkill" EntitySet="TrackSkill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tracks_Workload" Association="Self.FK_Tracks_Workload">
+            <End Role="Workload" EntitySet="Workload" />
+            <End Role="Tracks" EntitySet="Tracks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TSPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TSPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employees" EntityType="TSPModel.Employee" />
+          <EntitySet Name="EmpSkills" EntityType="TSPModel.EmpSkill" />
+          <EntitySet Name="EmpSubsidaries" EntityType="TSPModel.EmpSubsidary" />
+          <EntitySet Name="Roles" EntityType="TSPModel.Role" />
+          <EntitySet Name="Skills" EntityType="TSPModel.Skill" />
+          <EntitySet Name="Subsidaries" EntityType="TSPModel.Subsidary" />
+          <EntitySet Name="Tracks" EntityType="TSPModel.Track" />
+          <EntitySet Name="TrackSkills" EntityType="TSPModel.TrackSkill" />
+          <EntitySet Name="Workloads" EntityType="TSPModel.Workload" />
+          <AssociationSet Name="FK_Emp_Skills_Employees" Association="TSPModel.FK_Emp_Skills_Employees">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="EmpSkill" EntitySet="EmpSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp_Subsidary_Employees" Association="TSPModel.FK_Emp_Subsidary_Employees">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="EmpSubsidary" EntitySet="EmpSubsidaries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Employees" Association="TSPModel.FK_Employees_Employees">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Employee1" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Role" Association="TSPModel.FK_Employees_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Workload" Association="TSPModel.FK_Employees_Workload">
+            <End Role="Workload" EntitySet="Workloads" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp_Skills_Skills" Association="TSPModel.FK_Emp_Skills_Skills">
+            <End Role="Skill" EntitySet="Skills" />
+            <End Role="EmpSkill" EntitySet="EmpSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Emp_Subsidary_Subsidaries" Association="TSPModel.FK_Emp_Subsidary_Subsidaries">
+            <End Role="Subsidary" EntitySet="Subsidaries" />
+            <End Role="EmpSubsidary" EntitySet="EmpSubsidaries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Track_Skill_Skills" Association="TSPModel.FK_Track_Skill_Skills">
+            <End Role="Skill" EntitySet="Skills" />
+            <End Role="TrackSkill" EntitySet="TrackSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Track_Skill_Tracks" Association="TSPModel.FK_Track_Skill_Tracks">
+            <End Role="Track" EntitySet="Tracks" />
+            <End Role="TrackSkill" EntitySet="TrackSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tracks_Workload" Association="TSPModel.FK_Tracks_Workload">
+            <End Role="Workload" EntitySet="Workloads" />
+            <End Role="Track" EntitySet="Tracks" />
+          </AssociationSet>
+          <EntitySet Name="SkillLevels" EntityType="TSPModel.SkillLevel" />
+          <AssociationSet Name="FK_EmpSkills_SkillLevels" Association="TSPModel.FK_EmpSkills_SkillLevels">
+            <End Role="SkillLevel" EntitySet="SkillLevels" />
+            <End Role="EmpSkill" EntitySet="EmpSkills" />
+          </AssociationSet>
+          <FunctionImport Name="GetUnmappedSkillsByEmpId" EntitySet="Skills" ReturnType="Collection(TSPModel.Skill)">
+          <Parameter Name="empid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUnmappedSubsidiariesByEmpID" EntitySet="Subsidaries" ReturnType="Collection(TSPModel.Subsidary)">
+          <Parameter Name="empid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUnmappedSkillsByTrackId" EntitySet="Skills" ReturnType="Collection(TSPModel.Skill)">
+          <Parameter Name="trackid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="System_Users" EntityType="TSPModel.System_Users" />
+        </EntityContainer>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="Alias" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WorkloadID" Type="Int32" Nullable="false" />
+          <Property Name="JoiningDate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="ManagerID" Type="Int32" />
+          <NavigationProperty Name="EmpSkills" Relationship="TSPModel.FK_Emp_Skills_Employees" FromRole="Employee" ToRole="EmpSkill" />
+          <NavigationProperty Name="EmpSubsidaries" Relationship="TSPModel.FK_Emp_Subsidary_Employees" FromRole="Employee" ToRole="EmpSubsidary" />
+          <NavigationProperty Name="Employees1" Relationship="TSPModel.FK_Employees_Employees" FromRole="Employee" ToRole="Employee1" />
+          <NavigationProperty Name="Employee1" Relationship="TSPModel.FK_Employees_Employees" FromRole="Employee1" ToRole="Employee" />
+          <NavigationProperty Name="Role" Relationship="TSPModel.FK_Employees_Role" FromRole="Employee" ToRole="Role" />
+          <NavigationProperty Name="Workload" Relationship="TSPModel.FK_Employees_Workload" FromRole="Employee" ToRole="Workload" />
+        </EntityType>
+        <EntityType Name="EmpSkill">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmpID" Type="Int32" Nullable="false" />
+          <Property Name="SkillD" Type="Int32" Nullable="false" />
+          <Property Name="SkillLevelID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="TSPModel.FK_Emp_Skills_Employees" FromRole="EmpSkill" ToRole="Employee" />
+          <NavigationProperty Name="Skill" Relationship="TSPModel.FK_Emp_Skills_Skills" FromRole="EmpSkill" ToRole="Skill" />
+          <NavigationProperty Name="SkillLevel" Relationship="TSPModel.FK_EmpSkills_SkillLevels" FromRole="EmpSkill" ToRole="SkillLevel" />
+        </EntityType>
+        <EntityType Name="EmpSubsidary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmpID" Type="Int32" Nullable="false" />
+          <Property Name="SubsidaryID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="TSPModel.FK_Emp_Subsidary_Employees" FromRole="EmpSubsidary" ToRole="Employee" />
+          <NavigationProperty Name="Subsidary" Relationship="TSPModel.FK_Emp_Subsidary_Subsidaries" FromRole="EmpSubsidary" ToRole="Subsidary" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Employees" Relationship="TSPModel.FK_Employees_Role" FromRole="Role" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Skill">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EmpSkills" Relationship="TSPModel.FK_Emp_Skills_Skills" FromRole="Skill" ToRole="EmpSkill" />
+          <NavigationProperty Name="TrackSkills" Relationship="TSPModel.FK_Track_Skill_Skills" FromRole="Skill" ToRole="TrackSkill" />
+        </EntityType>
+        <EntityType Name="Subsidary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EmpSubsidaries" Relationship="TSPModel.FK_Emp_Subsidary_Subsidaries" FromRole="Subsidary" ToRole="EmpSubsidary" />
+        </EntityType>
+        <EntityType Name="Track">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WorkloadID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TrackSkills" Relationship="TSPModel.FK_Track_Skill_Tracks" FromRole="Track" ToRole="TrackSkill" />
+          <NavigationProperty Name="Workload" Relationship="TSPModel.FK_Tracks_Workload" FromRole="Track" ToRole="Workload" />
+        </EntityType>
+        <EntityType Name="TrackSkill">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SkillD" Type="Int32" Nullable="false" />
+          <Property Name="TrackID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Skill" Relationship="TSPModel.FK_Track_Skill_Skills" FromRole="TrackSkill" ToRole="Skill" />
+          <NavigationProperty Name="Track" Relationship="TSPModel.FK_Track_Skill_Tracks" FromRole="TrackSkill" ToRole="Track" />
+        </EntityType>
+        <EntityType Name="Workload">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Employees" Relationship="TSPModel.FK_Employees_Workload" FromRole="Workload" ToRole="Employee" />
+          <NavigationProperty Name="Tracks" Relationship="TSPModel.FK_Tracks_Workload" FromRole="Workload" ToRole="Track" />
+        </EntityType>
+        <Association Name="FK_Emp_Skills_Employees">
+          <End Type="TSPModel.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="TSPModel.EmpSkill" Role="EmpSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSkill">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp_Subsidary_Employees">
+          <End Type="TSPModel.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="TSPModel.EmpSubsidary" Role="EmpSubsidary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSubsidary">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Employees">
+          <End Type="TSPModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="TSPModel.Employee" Role="Employee1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employee1">
+              <PropertyRef Name="ManagerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Role">
+          <End Type="TSPModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="TSPModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Workload">
+          <End Type="TSPModel.Workload" Role="Workload" Multiplicity="1" />
+          <End Type="TSPModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="WorkloadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp_Skills_Skills">
+          <End Type="TSPModel.Skill" Role="Skill" Multiplicity="1" />
+          <End Type="TSPModel.EmpSkill" Role="EmpSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Skill">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSkill">
+              <PropertyRef Name="SkillD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Emp_Subsidary_Subsidaries">
+          <End Type="TSPModel.Subsidary" Role="Subsidary" Multiplicity="1" />
+          <End Type="TSPModel.EmpSubsidary" Role="EmpSubsidary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subsidary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSubsidary">
+              <PropertyRef Name="SubsidaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Track_Skill_Skills">
+          <End Type="TSPModel.Skill" Role="Skill" Multiplicity="1" />
+          <End Type="TSPModel.TrackSkill" Role="TrackSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Skill">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TrackSkill">
+              <PropertyRef Name="SkillD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Track_Skill_Tracks">
+          <End Type="TSPModel.Track" Role="Track" Multiplicity="1" />
+          <End Type="TSPModel.TrackSkill" Role="TrackSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Track">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TrackSkill">
+              <PropertyRef Name="TrackID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tracks_Workload">
+          <End Type="TSPModel.Workload" Role="Workload" Multiplicity="1" />
+          <End Type="TSPModel.Track" Role="Track" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Track">
+              <PropertyRef Name="WorkloadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SkillLevel">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EmpSkills" Relationship="TSPModel.FK_EmpSkills_SkillLevels" FromRole="SkillLevel" ToRole="EmpSkill" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_EmpSkills_SkillLevels">
+          <End Type="TSPModel.SkillLevel" Role="SkillLevel" Multiplicity="1" />
+          <End Type="TSPModel.EmpSkill" Role="EmpSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SkillLevel">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmpSkill">
+              <PropertyRef Name="SkillLevelID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SkillCheck_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SubsidariesCheck_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="TracksCheck_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="SkillD" Nullable="false" />
+          <Property Type="Int32" Name="TrackID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="AllSkills_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="System_Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RegDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TSPModelStoreContainer" CdmEntityContainer="TSPEntities">
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="TSPModel.Employee">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="JoiningDate" ColumnName="JoiningDate" />
+                <ScalarProperty Name="WorkloadID" ColumnName="WorkloadID" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpSkills">
+            <EntityTypeMapping TypeName="TSPModel.EmpSkill">
+              <MappingFragment StoreEntitySet="EmpSkills">
+                <ScalarProperty Name="SkillLevelID" ColumnName="SkillLevelID" />
+                <ScalarProperty Name="SkillD" ColumnName="SkillD" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpSubsidaries">
+            <EntityTypeMapping TypeName="TSPModel.EmpSubsidary">
+              <MappingFragment StoreEntitySet="EmpSubsidary">
+                <ScalarProperty Name="SubsidaryID" ColumnName="SubsidaryID" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="TSPModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Skills">
+            <EntityTypeMapping TypeName="TSPModel.Skill">
+              <MappingFragment StoreEntitySet="Skills">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subsidaries">
+            <EntityTypeMapping TypeName="TSPModel.Subsidary">
+              <MappingFragment StoreEntitySet="Subsidaries">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tracks">
+            <EntityTypeMapping TypeName="TSPModel.Track">
+              <MappingFragment StoreEntitySet="Tracks">
+                <ScalarProperty Name="WorkloadID" ColumnName="WorkloadID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrackSkills">
+            <EntityTypeMapping TypeName="TSPModel.TrackSkill">
+              <MappingFragment StoreEntitySet="TrackSkill">
+                <ScalarProperty Name="TrackID" ColumnName="TrackID" />
+                <ScalarProperty Name="SkillD" ColumnName="SkillD" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Workloads">
+            <EntityTypeMapping TypeName="TSPModel.Workload">
+              <MappingFragment StoreEntitySet="Workload">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SkillLevels">
+            <EntityTypeMapping TypeName="TSPModel.SkillLevel">
+              <MappingFragment StoreEntitySet="SkillLevels">
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetUnmappedSkillsByEmpId" FunctionName="TSPModel.Store.SkillCheck" />
+          <FunctionImportMapping FunctionImportName="GetUnmappedSubsidiariesByEmpID" FunctionName="TSPModel.Store.SubsidariesCheck" />
+          <FunctionImportMapping FunctionImportName="GetUnmappedSkillsByTrackId" FunctionName="TSPModel.Store.TracksCheck" />
+          <EntitySetMapping Name="System_Users">
+            <EntityTypeMapping TypeName="TSPModel.System_Users">
+              <MappingFragment StoreEntitySet="System_Users">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="RegDate" ColumnName="RegDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

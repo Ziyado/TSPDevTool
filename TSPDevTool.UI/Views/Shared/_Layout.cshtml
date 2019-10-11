@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/themes/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <style>
+        /* Styles */
+        * {
+            font-family: 'Raleway', sans-serif;
+            color: black;
+        }
+
+        .form-horizontal {
+            display: none;
+        }
+
+        .navbar-fixed-top {
+            height: 1%;
+        }
+
+        hr {
+            border: none;
+            height: 1.5px;
+            color: #033c73;
+            background-color: #033c73;
+        }
+       
+        /* The Styles for the X Button */
+        span {
+            color: black;
+        }
+
+        .tag {
+            font-size: 14px;
+            padding: .3em .4em .4em;
+            margin: 0 .1em;
+        }
+
+            .tag a {
+                color: #bbb;
+                cursor: pointer;
+                opacity: 0.6;
+            }
+
+                .tag a:hover {
+                    opacity: 1.0;
+                    text-decoration: none;
+                }
+
+            .tag .remove {
+                top: 0;
+            }
+
+            .tag a {
+                margin: 0 0 0 .3em;
+            }
+
+                .tag a .remove {
+                    vertical-align: middle;
+                    color: #fff;
+                    margin-bottom: 2px;
+                }
+
+        /* Styles for the navbar */
+        #search {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        #theSearch {
+            text-align: center;
+            width: 140px;
+            display: block;
+            list-style-type: none;
+        }
+
+        #theManage {
+            text-align: center;
+            width: 140px;
+            display: block;
+            list-style-type: none;
+        }
+
+        #theEmp {
+            text-align: center;
+            width: 140px;
+            display: block;
+            list-style-type: none;
+        }
+
+        .mainList {
+            width: 100px;
+            /*position: static;
+            left: 10000px;*/
+            display: none;
+        }
+
+        .secondList {
+            display: none;
+            list-style-type: none;
+            text-decoration-style: none;
+            text-decoration: none;
+            width: 140px;
+            background-color: #033c73;
+        }
+
+        .log, .log:active, .log:visited, .log:target, .log > a {
+            list-style-type: none;
+            text-decoration-style: none;
+            text-decoration: none;
+            width: 100%;
+            color: white;
+            font-size: 14px;
+        }
+
+            .log a:hover {
+                color: Black;
+                cursor:default;
+            }
+    </style>
+    <script>
+        //Document.ready Function
+        $(document).ready(function () {
+
+            //Animations
+            $('.form-horizontal').slideDown(699);
+
+            $("#theSearch").hover(function () {
+                $("#theSearchUl").fadeIn(300);
+                $(".searching").fadeIn(300);
+            }, function () {
+                $("#theSearchUl").fadeOut(300);
+                $(".searching").fadeOut(300);
+            });
+
+            $("#theManage").hover(function () {
+                $("#theManageUl").fadeIn(300);
+                $(".managers").fadeIn(300);
+            }, function () {
+                $("#theManageUl").fadeOut(300);
+                $(".managers").fadeOut(300);
+            });
+
+            $("#theEmp").hover(function () {
+                $("#theEmpUl").fadeIn(400);
+                $(".emp").fadeIn(400);
+            }, function () {
+                $("#theEmpUl").fadeOut(400);
+                $(".emp").fadeOut(400);
+            })
+
+            //Add & Remove Buttons in all the search by views
+            $("#addSkillBtn, #addSubBt, #rButton, #rButton2,  button[id='search'],  input[value = 'Save'],input[value = 'Delete']").css("width", "110px");
+            $("#addSkillBtn, #addSubBtn, #rButton, #rButton2, button[id='search'],  input[value = 'Save'],input[value = 'Delete']").css("height", "30px");
+            $("#addSkillBtn, #addSubBtn, #rButton, #rButton2, button[id='search'],  input[value = 'Save'],input[value = 'Delete']").css("padding", "0px");
+            $("#addSkillBtn, #rButton, #rButton2").css("vertical-align", "middle");
+            $("#addSkillBtn").text("Add to Filter");
+            $("#rButton, #rButton2").text("Remove All");
+
+            //Altering the h4
+            $("h5").css("color", "transparent")
+            $("h5").css("cursor","default")
+            $("h5").html("S")
+
+            //Changing the buttons design
+            $("button").removeClass("btn-default");
+            $("input[type='button']").removeClass("btn-default");
+            $("input[type='submit']").removeClass("btn-default");
+
+            $("button").addClass("btn");
+            $("input[type='button']").addClass("btn");
+            $("input[type='submit']").addClass("btn");
+
+
+
+        });
+    </script>
+
+    @* Authentication to show the navbar if true *@
+
+    @{
+        if (Request.IsAuthenticated)
+        {
+            <style>
+                #theMainUl {
+                    display: inline-block;
+                }
+            </style>
+        }
+        else
+        {
+            <style>
+                #theMainUl {
+                    display: none;
+                }
+            </style>
+        }
+
+    }
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("TSP DEV Tools", "", "", new { area = "" }, new { @class = "navbar-brand", @style = "font-weight: 600; color: white;" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" id="theMainUl">
+
+                    <li id="theManage">
+                        <a>Manage</a>
+                        <ul id="theManageUl" class="nav navbar-nav mainList">
+                            <li class="managers secondList">@Html.ActionLink("Skills", "Index", "Skills")</li>
+                            <li class="managers secondList">@Html.ActionLink("Tracks", "Index", "Tracks")</li>
+                            <li class="managers secondList">@Html.ActionLink("Skill Levels", "Index", "SkillLevels")</li>
+                        </ul>
+                    </li>
+
+                    <li id="theEmp">
+                        @Html.ActionLink("Employees", "Index", "Employees")
+                        <ul id="theEmpUl" class="nav navbar-nav mainList">
+                            <li class="emp secondList">@Html.ActionLink("By Role", "SearchbyRole", "Employees")</li>
+                            <li class="emp secondList">@Html.ActionLink("By Joining Date", "SearchByJoiningDate", "Employees")</li>
+                            @*<li class="emp secondList">@Html.ActionLink("By Roles", "SearchbyRoles", "Employees")</li>*@
+                            @*<li class="emp secondList">@Html.ActionLink("Search", "Details", "Employees", new { @id = "15" }, "")</li>
+                                <li class="emp secondList">@Html.ActionLink("Saeed", "Details", "Employees", new { @id = "2" }, "")</li>
+                                <li class="emp secondList">@Html.ActionLink("Ziyad", "Details", "Employees", new { @id = "16" }, "")</li>*@
+                        </ul>
+                    </li>
+
+                    <li id="theSearch">
+                        <a>Search</a>
+                        <ul id="theSearchUl" class="nav navbar-nav mainList">
+                            <li class="searching secondList">@Html.ActionLink("By Skill", "Index", "Search")</li>
+                            <li class="searching secondList">@Html.ActionLink("By Track", "SearchByTrack", "Search")</li>
+                            <li class="searching secondList">@Html.ActionLink("By Subsidiary", "SearchBySubs", "Search")</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul style="float: right;">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <strong style="text-align: right; font-size: 18px; padding-left: 10px; color: black ">@Html.Encode(User.Identity.Name)</strong>
+                        <li class="log" style="color:white;">@Html.ActionLink("Sign Out", "Logout", "User")</li>
+                    }
+
+                    else
+                    {
+
+                        <li class="log" style="padding-top: 15px; color:white;">
+                            <a>Register</a>
+                            @*@Html.ActionLink("Register", "Register", "User")*@
+                            @*<span> | </span>
+                                @Html.ActionLink("Sign In", "Login", "User")*@
+                        </li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2017 - TSP DEV Tools</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

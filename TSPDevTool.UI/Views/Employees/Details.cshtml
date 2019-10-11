@@ -1,0 +1,114 @@
+﻿@model TSPDevTools.Model.Employee
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<style>
+
+    tr {
+        border-width: 0px;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+
+    td{
+        border-width: 0px;
+        margin: 0px;
+        padding: 5px 10px 10px 0px;
+        text-align:left;
+    }
+
+    td:first-child{
+        font-size: 11pt;
+        font-weight:bold;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.form-horizontal').slideDown(2000);
+    });
+    
+</script>
+<div class="form-horizontal">
+    <h2>@Html.DisplayFor(model => model.Name)</h2>
+
+    
+    <h4>User Profile</h4>
+    
+    <hr />
+   
+    <table class="dl-horizontal">
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.Alias)
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Alias)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.JoiningDate)
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.JoiningDate)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Manager
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Employee1.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Role
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Role.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Workload
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Workload.Name)
+            </td>
+        </tr>
+    </table>
+
+    <h3>Employee Skills</h3>
+
+    @Html.Partial("_userSkills", Model.EmpSkills)
+    <br />
+
+    <h3>Employee Subsidaries</h3>
+
+    @Html.Partial("_UserSubs", Model.EmpSubsidaries)
+    <br /><br />
+
+    <script>
+        $(".theX").remove();
+    </script>
+    <style>
+        .tag {
+            padding: 5px 15px 5px 15px;
+        }
+    </style>
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>

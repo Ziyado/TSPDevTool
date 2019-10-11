@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TSPDevTools.Model.Employee>
+
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Alias
+        </th>
+        <th>
+            Joining Date
+        </th>
+        <th>
+            Manager
+        </th>
+        <th>
+            Role
+        </th>
+        <th>
+            Workload
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alias)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JoiningDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee1.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Workload.Name)
+            </td>
+            <td>
+
+
+                @Html.ActionLink("Edit", "Edit", new { controller = "Employees", id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { controller = "Employees", id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { controller = "Employees", id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<TSPDevTools.Model.Skill>
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script>
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                // Skills autocomplete
+    $(document).ready(function () {
+        $("#skillstxt").autocomplete({
+            source: function (request, response) {
+                var skills = new Array();
+                $.ajax({
+                    url: "/Search/GetAutoSkills",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        $("#skillselectedhdn").val("");
+                        for (var i = 0; i < data.length; i++) {
+                            skills[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                        }
+                        response(skills);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#skillselectedhdn").val(ui.item.Id);
+            }
+        });
+    })
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                //Add function
+    $(document).ready(function () {
+        $("#addSkillBtn").click(function () {
+            if ($("#skillselectedhdn").val() != "") {
+                $.ajax({
+                    url: "/Search/AddSkills",
+                    type: "GET",
+                    data: { skillId: $("#skillselectedhdn").val(), skillname: $("#skillstxt").val() },
+                    success: function (data) {
+                        $("#partial").html(data);
+                    }
+                });
+            }
+            $("#skillstxt").val("");  // Removing text after search
+        })
+   
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                 //Search
+        $("#search").click(function () {
+            var status = document.getElementById("exact").checked;
+            $.ajax({
+                url: "/Search/Find",
+                type: "GET",
+                data: {checkbox : status},
+                success: function (data) {
+                    $("#result").html(data);
+                }
+            });
+        });
+    })
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                      //Remove All
+        //Delete All Skills Button
+        $(document).ready(function(){
+        $("#rButton").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Search/RemoveAllSkills",
+                    dataType: 'json',
+                    success: function (data) {
+
+                        $("#partial").html(data);
+                    },
+               }); 
+        })
+    })
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
+</script>
+<div class="form-horizontal">
+    <h5>Search By Skills</h5>
+    <div>
+        @Html.Label("Search By Skill")
+        @Html.TextBox("skillstxt")
+        @Html.Hidden("skillselectedhdn")
+        <button id="addSkillBtn" class="btn" type="button" style="width: 200px; height: auto; vertical-align:middle;">Add Skill in filter</button>
+        <button id="rButton" class="btn" type="button" style="width: 200px; height: auto; vertical-align:middle; text-align:center"> Remove All Skills in Filter </button>
+        <br /><br />
+        <div id="partial" style="margin: 5px 5px 15px 0px; padding: 0px">
+            @Html.Partial("_SkillsFilter", Model)
+        </div>
+        <div>
+            <input type="checkbox" name="exact" id="exact">Match All Skills<br>
+            <button id="search" type="button" class="btn">search</button>
+        </div>
+
+        <div id="result">
+
+        </div>
+
+    </div>
+</div>

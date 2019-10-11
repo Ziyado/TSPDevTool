@@ -1,0 +1,96 @@
+﻿    @model IEnumerable<TSPDevTools.Model.EmpSkill>
+
+    @{
+        ViewBag.Title = "User Skills";
+    }
+
+    <style>
+        span {
+            color: black;
+        }
+
+        .tag {
+            font-size: 14px;
+            padding: .3em .4em .4em;
+            margin: 0 .1em;
+        }
+
+            .tag a {
+                color: #bbb;
+                cursor: pointer;
+                opacity: 0.6;
+            }
+
+         .tag a:hover {
+             opacity: 1.0;
+             text-decoration:none;
+         }
+
+            .tag .remove{
+                vertical-align:baseline;
+                top: 0;
+            }
+
+            .tag a {
+                margin: 0 0 0 .3em;
+            }
+
+                .tag a .remove {
+                    color: #fff;
+                    margin-bottom: 2px;
+                }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $(".remove").click(function () {
+                var xIcon = $(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteEmpSkill")',
+                    data: { "EmpSkillId": $(this).parent().siblings("input").val() },
+                    dataType: 'json',
+                    success: function (data) {
+                        xIcon.parent().parent().animate({
+                            opacity: 0.0,
+                        }, 500, function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+
+            });
+
+            @*$.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("DeleteEmpSkill")',
+                    data: { "EmpSkillId": $(this).parent().siblings("input").val() },
+                    dataType: 'json',
+                    success: function (data) {
+
+                        var ctx = $("#mycanvas").get(0).getContext("2d");
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }*@
+
+        });
+    </script>
+    <table>
+        <tr id="mainTr" style="max-width:10%;">  
+            @foreach (var item in Model)
+                {
+                <th>
+                    <span class="tag label label-info" style="background-color:@item.SkillLevel.Color">
+                        <span class="skills">@Html.DisplayFor(modelItem => item.Skill.Name)</span>
+                        <a class="theX"><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a>
+                        <input type="hidden" id="EmpSkillId" value="@item.ID"/>
+                    </span>
+                </th>
+            }
+        </tr>
+    </table>

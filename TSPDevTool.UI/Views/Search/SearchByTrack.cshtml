@@ -1,0 +1,154 @@
+﻿@model IEnumerable<TSPDevTools.Model.Track>
+
+@{
+    ViewBag.Title = "SearchByTrack";
+}
+
+<script>
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                // Tracks autocomplete
+    $(document).ready(function () {
+        $("#skillstxt").autocomplete({
+            source: function (request, response) {
+                var tracks = new Array();
+                $.ajax({
+                    url: "/Search/GetAutoTracks",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        $("#skillselectedhdn").val("");
+                        for (var i = 0; i < data.length; i++) {
+                            tracks[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                        }
+                        response(tracks);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#skillselectedhdn").val(ui.item.Id);
+            }
+        });
+    })
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                //Add function
+    $(document).ready(function () {
+        $("#addSkillBtn").click(function () {
+            if ($("#skillselectedhdn").val() != "") {
+                $.ajax({
+                    url: "/Search/AddTracks",
+                    type: "GET",
+                    data: { trackId: $("#skillselectedhdn").val(), trackname: $("#skillstxt").val() },
+                    success: function (data) {
+                        $("#partial").html(data);
+                    }
+                });
+            }
+            $("#skillstxt").val("");  // Removing text after search
+        })
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                     // Minimum skill level in search by track view          
+
+        $("#search").click(function () {
+            $.ajax({
+                url: "/Search/FindTrackTest",
+                type: "GET",
+                data: { skillLevel: $("#SkillLevels").val() },
+                success: function (data) {
+                    $("#results").html(data);
+                }
+            });
+        });
+    })
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                      //Remove All
+        //Delete All Skills Button
+        $(document).ready(function(){
+        $("#rButton").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Search/RemoveAllTracks",
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#partial").html(data);
+                    },
+               });
+        })
+    })
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+</script>
+
+<style>
+    /*Fade in animation*/
+    /*#editFields {
+        display: none;
+    }
+
+    #theView {
+        display: none;
+    }*/
+
+    /* Select drop down list */
+    #SkillLevels option[value="1"] {
+        background-color: red;
+    }
+
+        #SkillLevels option[value="2"] {
+            background-color: yellow;
+        }
+
+        #SkillLevels option[value="3"] {
+            background-color: deepskyblue;
+        }
+
+        #SkillLevels option[value="4"] {
+            background-color: green;
+        }
+
+        #SkillLevels option {
+            color: black;
+            font-weight:bolder;
+        }
+
+        #SkillLevels {
+            text-align: left; 
+            margin: 0px;
+            padding: 0px;
+        }
+
+    /* Add Skill */
+        #skillstxt{
+            margin-left: 5px;
+            width: 10%;
+        }
+</style>
+
+<div class="form-horizontal">
+    <h5>Search By Tracks</h5>
+    <div>
+        @Html.Label("Search By Tracks")
+        @Html.TextBox("skillstxt")
+        @Html.Label("Minimum Skill Level")
+        @Html.DropDownList("SkillLevels", ViewBag.SkillLevels as SelectList) @*dropdownlist for skill level*@
+        @Html.Hidden("skillselectedhdn")
+        <button id="addSkillBtn" class="btn" type="button" style="width: 200px; height: auto; vertical-align:middle;">Add Track in filter</button>
+        <button id="rButton" class="btn" type="button" style="width: 200px; height: auto; vertical-align:middle; text-align:center"> Remove All Tracks in Filter </button>
+       <!--skill levels dropdown list-->
+        <br /><br />
+        <div id="partial">
+            @Html.Partial("_TracksFilter", Model)
+
+        </div>
+        <button id="search" type="button" class="btn">search</button>
+        <div id="results">
+
+        </div>
+
+    </div>
+</div>

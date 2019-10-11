@@ -1,0 +1,35 @@
+﻿@model IEnumerable<TSPDevTools.Model.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+
+<script>
+    //Search by Employee Funciton 
+    $(document).ready(function () { 
+        
+        $('#searchEmp').keyup(function () {
+            $.ajax({
+                url: "/Employees/SearchEmp",
+                data: { searchstring : $('#searchEmp').val() },
+                success: function (data) {
+                    $("#partial").html(data);
+                }
+            });
+            });
+
+    })
+   
+</script>
+
+<div class="form-horizontal">
+    <input id="searchEmp" type="text" placeholder="Search Employees" style="float:right;" /> <!--SearchEmps textbox-->
+    <h2>Employees</h2>
+    </div>
+
+<div id="partial">
+    @Html.Partial("_SearchByEmp", Model) @*To leave the partial view always till keyup*@
+</div>

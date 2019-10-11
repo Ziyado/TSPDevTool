@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Welcome, @Html.Encode(User.Identity.Name)!</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4" style="width:100%">
+        <h2>Getting started with TSP Dev Tools</h2>
+        <p>
+            TSP Dev Tool allows you to track your performance and your employees with ease. In addition to assigning workloads and tracking their status.
+        </p>
+        <p><a class="btn" href="/Home/Contact">Contact the developers &raquo;</a></p>
+    </div>
+</div>

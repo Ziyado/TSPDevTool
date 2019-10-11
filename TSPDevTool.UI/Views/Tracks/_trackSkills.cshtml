@@ -1,0 +1,94 @@
+﻿@model IEnumerable<TSPDevTools.Model.TrackSkill>
+@{
+    ViewBag.Title = "Track Skills";
+}
+
+
+<style>
+    span {
+        color: black;
+    }
+
+    .tag {
+        font-size: 14px;
+        padding: .3em .4em .4em;
+        margin: 0 .1em;
+    }
+
+        .tag a {
+            color: #bbb;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+            .tag a:hover {
+                opacity: 1.0
+            }
+
+        .tag .remove {
+            vertical-align: bottom;
+            top: 0;
+        }
+
+        .tag a {
+            margin: 0 0 0 .3em;
+        }
+
+            .tag a .glyphicon-white {
+                color: #fff;
+                margin-bottom: 2px;
+            }
+
+    /* My Styles */
+
+    /* table styles */
+    table {
+        float: left;
+    }
+
+    /** span syles (Skills)*/
+    #sView:hover {
+        transform: scale(1.2);
+    }
+</style>
+
+<script>
+                                                           // Remove Function 
+    $(document).ready(function () {
+        $(".remove").click(function () {
+            var xIcon = $(this);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteTrackSkill")',
+                data: { "TrackSkillId": $(this).parent().siblings("input").val() },
+                dataType: 'json',
+                success: function (data) {
+                    xIcon.parent().parent().animate({
+                        opacity: 0.0,
+                    }, 500, function () {
+                        $(this).remove();
+                    });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+
+<table>
+    <tr id="mainTr">
+        @foreach (var item in Model)
+            {
+            <th>
+                <span class="tag label label-info" style="background-color: grey">
+                    <span class="skills">@Html.DisplayFor(modelItem => item.Skill.Name)</span>
+                    <a class="theX"><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a>
+                    <input type="hidden" id="EmpSkillId" value="@item.ID" />
+                </span>
+            </th>
+        }
+    </tr>
+</table>

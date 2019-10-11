@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TSPDevTools.Model.Employee>
+
+@{
+    ViewBag.Title = "SearchByJoiningDate";
+}
+
+<script>
+    //Search by Employee Funciton
+    $(document).ready(function () {
+        $("#search").click(function () {
+            $.ajax({
+                url: "/Employees/SearchDate",
+                data: { From: $('#From').val(), To: $('#To').val() },
+                success: function (data) {
+                    $("#partial").html(data);
+                }
+            });
+        });
+    })
+</script>
+
+<div class="form-horizontal">
+    
+    <h3>Search by joining date</h3>
+
+    From:
+    <input id="From" type="date"/> <!--SearchEmps textbox-->
+
+    To:
+    <input id="To" type="date"/> <!--SearchEmps textbox-->
+
+    <button id="search" type="button" class="btn" style="margin-left: 5px;">Search</button>
+
+    <h2>Employees</h2>
+
+
+    <div id="partial">
+        @Html.Partial("_SearchByEmp", Model) @*To leave the partial view always till keyup*@
+    </div>
+</div>

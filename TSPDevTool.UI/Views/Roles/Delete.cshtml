@@ -1,0 +1,58 @@
+﻿@model TSPDevTools.Model.Role
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+
+<style>
+    tr {
+        border-width: 0px;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+
+    td {
+        border-width: 0px;
+        margin: 0px;
+        padding: 5px 10px 10px 0px;
+        text-align: left;
+    }
+
+        td:first-child {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+</style>
+
+<div class="form-horizontal">
+    <h2>Delete</h2>
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Role</h4>
+        <hr />
+        <table class="dl-horizontal">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Name)
+                </td>
+            </tr>
+        </table>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</div>

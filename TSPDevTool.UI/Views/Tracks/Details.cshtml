@@ -1,0 +1,90 @@
+﻿@model TSPDevTools.Model.Track
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<style>
+
+    table{
+        margin-bottom: 10px;
+    }
+
+    tr {
+        border-width: 0px;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+
+    td {
+        border-width: 0px;
+        margin: 0px;
+        padding: 5px 10px 5px 0px;
+        text-align: left;
+    }
+
+        td:first-child {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        h3{
+            margin-top: 15px;
+            width: 20%;
+        }
+</style>
+
+<div class="form-horizontal">
+
+    <h2>Details</h2>
+
+
+    <h4>Track</h4>
+    <hr />
+    <table class="dl-horizontal">
+        <tr>
+            <td>
+                Track Name
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Workload
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Workload.Name)
+            </td>
+        </tr>
+    </table>
+
+    <br/></br>
+
+    <div>   
+    <h3>Employee Skills</h3>
+
+    @Html.Partial("_trackSkills", Model.TrackSkills)
+    <br />
+    <br /><br />
+        </div>
+    <script>
+        $(".theX").remove();
+    </script>
+    <style>
+        .tag {
+            padding: 5px 15px 5px 15px;
+        }
+    </style>
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+</div>
+

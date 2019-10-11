@@ -1,0 +1,60 @@
+﻿@model TSPDevTools.Model.SkillLevel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<style>
+    tr {
+        border-width: 0px;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+
+    td {
+        border-width: 0px;
+        margin: 0px;
+        padding: 5px 10px 10px 0px;
+        text-align: left;
+    }
+
+        td:first-child {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+</style>
+
+<div class="form-horizontal">
+    <h2>Details</h2>
+    
+    <h4>SkillLevel</h4>
+    
+    <hr />
+        
+    <table class="dl-horizontal">
+        <tr>
+            <td>
+                Skill Level
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+
+            <tr>
+                <td>
+                    Color
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Color)
+                </td>
+            </tr>
+        </table>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>

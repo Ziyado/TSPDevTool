@@ -1,0 +1,106 @@
+﻿@model IEnumerable<TSPDevTools.Model.Subsidary>
+
+@{
+    ViewBag.Title = "SearchBySubs";
+}
+
+<script>
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                // Subs autocomplete
+    $(document).ready(function () {
+        $("#skillstxt").autocomplete({
+            source: function (request, response) {
+                var subs = new Array();
+                $.ajax({
+                    url: "/Search/GetAutoSubs",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        $("#skillselectedhdn").val("");
+                        for (var i = 0; i < data.length; i++) {
+                            subs[i] = { label: data[i].Name, value: data[i].Name, Id: data[i].ID };
+                        }
+                        response(subs);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#skillselectedhdn").val(ui.item.Id);
+            }
+        });
+    })
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                //Add function
+    $(document).ready(function () {
+        $("#addSkillBtn").click(function () {
+            if ($("#skillselectedhdn").val() != "") {
+                $.ajax({
+                    url: "/Search/AddSubs",
+                    type: "GET",
+                    data: { subId: $("#skillselectedhdn").val(), subname: $("#skillstxt").val() },
+                    success: function (data) {
+                        $("#partial").html(data);
+                    }
+                });
+            }
+                 $("#skillstxt").val("");  // Removing text after search
+        })
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Find
+
+        $("#search").click(function () {
+            $.ajax({
+                url: "/Search/FindSub",
+                type: "GET",
+                success: function (data) {
+                    $("#results").html(data);
+                }
+            });
+        });
+    })
+         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                      //Remove All
+        //Delete All Subs Button
+        $(document).ready(function(){
+        $("#rButton").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Search/RemoveAllSubs",
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#partial").html(data);
+                    },
+               });
+        })
+    })
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+</script>
+<div class="form-horizontal">
+    <h5>Search By Subsidiaries</h5>
+    <div>
+        @Html.Label("Search By Subsidiary")
+        @Html.TextBox("skillstxt")
+        @Html.Hidden("skillselectedhdn")
+        <button id="addSkillBtn" class="btn" type="button" style="width: 200px; height: auto; vertical-align:middle;">Add Track in filter</button>
+        <button id="rButton" class="btn" type="button" style="width: 200px; height: auto;" > Remove All Tracks in Filter </button>
+        <br /><br />
+        <div id="partial">
+            @Html.Partial("_SubsFilter", Model)
+
+
+        </div>
+        <button id="search" type="button" class="btn">search</button>
+        <div id="results">
+
+        </div>
+
+    </div>
+</div>

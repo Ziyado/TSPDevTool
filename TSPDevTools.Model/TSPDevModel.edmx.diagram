@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7fbfefe377424165961d05a311ec8436" Name="Diagram1">
+        <EntityTypeShape EntityType="TSPModel.Employee" Width="1.5" PointX="3.75" PointY="3.375" />
+        <EntityTypeShape EntityType="TSPModel.EmpSkill" Width="1.5" PointX="3.375" PointY="0.5" />
+        <EntityTypeShape EntityType="TSPModel.EmpSubsidary" Width="1.5" PointX="6" PointY="2.875" />
+        <EntityTypeShape EntityType="TSPModel.Role" Width="1.5" PointX="1.125" PointY="0.5" />
+        <EntityTypeShape EntityType="TSPModel.Skill" Width="1.5" PointX="2.375" PointY="7.875" />
+        <EntityTypeShape EntityType="TSPModel.Subsidary" Width="1.5" PointX="4.5" PointY="7.75" />
+        <EntityTypeShape EntityType="TSPModel.Track" Width="1.5" PointX="1.375" PointY="5.25" />
+        <EntityTypeShape EntityType="TSPModel.TrackSkill" Width="1.5" PointX="6.125" PointY="5.375" />
+        <EntityTypeShape EntityType="TSPModel.Workload" Width="1.5" PointX="1" PointY="2.75" />
+        <AssociationConnector Association="TSPModel.FK_Emp_Skills_Employees" />
+        <AssociationConnector Association="TSPModel.FK_Emp_Subsidary_Employees" />
+        <AssociationConnector Association="TSPModel.FK_Employees_Employees" />
+        <AssociationConnector Association="TSPModel.FK_Employees_Role" />
+        <AssociationConnector Association="TSPModel.FK_Employees_Workload" />
+        <AssociationConnector Association="TSPModel.FK_Emp_Skills_Skills" />
+        <AssociationConnector Association="TSPModel.FK_Emp_Subsidary_Subsidaries" />
+        <AssociationConnector Association="TSPModel.FK_Track_Skill_Skills" />
+        <AssociationConnector Association="TSPModel.FK_Track_Skill_Tracks" />
+        <AssociationConnector Association="TSPModel.FK_Tracks_Workload" />
+        <EntityTypeShape EntityType="TSPModel.SkillLevel" Width="1.5" PointX="6" PointY="0.5" />
+        <AssociationConnector Association="TSPModel.FK_EmpSkills_SkillLevels" />
+        <EntityTypeShape EntityType="TSPModel.sysdiagram" Width="1.5" PointX="8.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TSPModel.System_Users" Width="1.5" PointX="8.375" PointY="3.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

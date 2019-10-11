@@ -1,0 +1,74 @@
+﻿@model IEnumerable<TSPDevTool.UI.Models.EmpResultModel>
+<div style="overflow:auto">
+    <table class="table">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Alias
+            </th>
+            <th>
+                Joining Date
+            </th>
+            <th>
+                Manager
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Workload
+            </th>
+            <th>
+                Skills Matched
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Alias)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.JoiningDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Employee1.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Role.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Workload.Name)
+                </td>
+                <td>
+                    <div class="container" style="width: 200px; padding:0px;" >
+                        <div class="progress">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="@Html.DisplayFor(modelItem => item.MatchedSkillsPercentage)" aria-valuemin="0" aria-valuemax="100" style="width:@Html.DisplayFor(modelItem => item.MatchedSkillsPercentage)%; padd">
+                                @Html.DisplayFor(modelItem => item.MatchedSkillsPercentage)%
+                            </div> 
+                        </div>
+                    </div>
+                        </div>
+                        
+                </td>
+                <td>
+
+
+                    @Html.ActionLink("Edit", "Edit", new { controller = "Employees", id = item.Employee.ID }) |
+                    @Html.ActionLink("Details", "Details", new { controller = "Employees", id = item.Employee.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { controller = "Employees", id = item.Employee.ID })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
